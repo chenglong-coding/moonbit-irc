@@ -1,0 +1,49 @@
+{
+  "project": "irc",
+  "checks": [
+    {
+      "command": "moon fmt",
+      "exit_code": 0,
+      "output": "Finished. moon: ran 10 tasks, now up to date\n",
+      "utc": "2026-09-09T18:52:48.719795+00:00"
+    },
+    {
+      "command": "moon info",
+      "exit_code": 0,
+      "output": "Finished. moon: ran 2 tasks, now up to date\n",
+      "utc": "2026-09-09T18:52:48.900973+00:00"
+    },
+    {
+      "command": "moon check --deny-warn",
+      "exit_code": 0,
+      "output": "Finished. moon: ran 2 tasks, now up to date\n",
+      "utc": "2026-09-09T18:52:49.266008+00:00"
+    },
+    {
+      "command": "moon test --deny-warn",
+      "exit_code": 0,
+      "output": "Total tests: 6, passed: 6, failed: 0.\n",
+      "utc": "2026-09-09T18:52:49.600967+00:00"
+    },
+    {
+      "command": "moon test --target js --deny-warn",
+      "exit_code": 0,
+      "output": "Total tests: 6, passed: 6, failed: 0.\n",
+      "utc": "2026-09-09T18:52:49.790528+00:00"
+    },
+    {
+      "command": "moon build --target js --deny-warn",
+      "exit_code": 0,
+      "output": "Finished. moon: no work to do\n",
+      "utc": "2026-09-09T18:52:50.096255+00:00"
+    },
+    {
+      "command": "moon run cmd/main",
+      "exit_code": 0,
+      "output": "command=PRIVMSG, target=#moonbit, text=hello MoonBit\n@time=2026-09-10T00:00:00Z :alice!u@host PRIVMSG #moonbit :hello MoonBit\n\n",
+      "utc": "2026-09-09T18:52:50.248557+00:00"
+    }
+  ],
+  "demo": "command=PRIVMSG, target=#moonbit, text=hello MoonBit\n@time=2026-09-10T00:00:00Z :alice!u@host PRIVMSG #moonbit :hello MoonBit",
+  "source_lines": 288
+}

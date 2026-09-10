@@ -1,0 +1,5 @@
+import {
+  "localreview/irc" @lib,
+}
+
+pkgtype(kind: "executable")

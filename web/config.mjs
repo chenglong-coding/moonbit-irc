@@ -1,0 +1,1 @@
+export default {"slug": "irc", "title": "IRC 协议核心", "description": "IRC 消息、IRCv3 tags 和受限增量行解析", "source": "https://modern.ircdocs.horse/", "scope": "prefix、command、params、tags 转义、CRLF framing", "limitations": "TCP/TLS、SASL、服务器状态缓存、真实服务器互通", "version": "0.1.0", "example": "@time=2026-09-10T00:00:00Z :alice!user@host PRIVMSG #moonbit :hello MoonBit"};
