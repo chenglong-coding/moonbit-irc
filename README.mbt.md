@@ -21,7 +21,7 @@ test "PING matching PONG" {
 }
 ```
 
-限制：仍不含 socket/TLS、自动重连、SASL 认证和完整网络客户端；CAP END 与注册时机由调用方控制。
+限制：尚无 SASL/PASS 认证、频道成员/模式缓存、自动重加入和长期真实 IRC 服务端互操作；Node 宿主提供网络，Wasm-GC 核心仍由宿主接入传输。
 
 
 新增 MoonBit CAP 302 状态：多行 LS/LIST/ACK 原子更新、能力值、REQ、NAK、NEW/DEL 和资源边界。
@@ -44,3 +44,6 @@ test "CAP negotiation lifecycle" {
 ```
 
 接入时发送 `CAP LS 302` 和 NICK/USER，逐条调用 `observe`；`listing_complete` 后选择能力并发送 `request` 结果。等待 ACK 与应用层认证完成后发送 `CAP END`。不支持 CAP 的服务器、超时与连接重置由宿主管理；每次新连接创建新实例。网页和 CLI 目前提供消息解析入口，新状态 API 如上调用。
+
+
+0.4.0 新增 MoonBit 注册/协商会话和 Node TCP/TLS 客户端：自动 PONG、CAP 选择与等待确认、注册拒绝、超时、有上限的重连、收发缓冲限制。

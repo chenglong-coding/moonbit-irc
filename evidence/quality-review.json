@@ -1,24 +1,24 @@
 {
   "project": "moonbit-irc",
-  "version": "0.3.0",
-  "timestamp": "2026-09-10T12:14:10.757689+00:00",
+  "version": "0.4.0",
+  "timestamp": "2026-09-10T12:20:59.013895+00:00",
   "exit_code": 0,
   "backend_test_counts": [
     [
-      "18",
-      "18",
+      "22",
+      "22",
       "0"
     ],
     [
-      "18",
-      "18",
+      "22",
+      "22",
       "0"
     ]
   ],
-  "scope": "Local Windows verify.ps1; IRCv3 CAP 302 specification scenarios; remote CI not run",
+  "scope": "Local Windows verify.ps1; IRCv3 state scenarios plus nine loopback TCP/TLS integration tests; remote CI not run",
   "coverage": {
-    "covered": 256,
-    "total": 284,
+    "covered": 320,
+    "total": 354,
     "measurement": "MoonBit instrumentation points"
   },
   "robustness": {
@@ -31,20 +31,23 @@
   },
   "benchmark": {
     "project": "irc",
-    "utc": "2026-09-10T12:13:40.994Z",
+    "utc": "2026-09-10T12:20:23.825Z",
     "runtime": "v24.11.0",
     "platform": "win32",
     "cpu": "Intel(R) Core(TM) i7-14700HX",
     "input_utf8_bytes": 75,
     "samples": 30,
     "warmup": 5,
-    "median_ms": 0.12959999999999638,
-    "p95_ms": 0.5431000000000026,
-    "max_ms": 0.6357999999999961,
+    "median_ms": 0.11659999999999826,
+    "p95_ms": 0.2773000000000039,
+    "max_ms": 0.5293999999999954,
     "scope": "JS warm execution of documented example; no cross-project or upstream performance claim"
   },
-  "new_specification_tests": 10,
+  "cap_specification_tests": 10,
+  "session_tests": 4,
+  "network_integration_tests": 9,
   "reference": "https://ircv3.net/specs/extensions/capability-negotiation.html",
-  "live_server_interoperability": "not run",
+  "third_party_daemon_interoperability": "not run",
+  "network_integration": "real loopback TCP and TLS with protocol fixture; trust and hostname verification",
   "remote_ci": "not run"
 }

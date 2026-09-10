@@ -1,6 +1,6 @@
 # IRC 协议核心
 
-IRC 消息、IRCv3 tags 和受限增量行解析。本地候选版 0.3.0，供比较和代码审查；尚未作为完整竞赛作品提交。
+IRC 消息、IRCv3 tags 和受限增量行解析。本地候选版 0.4.0，供比较和代码审查；尚未作为完整竞赛作品提交。
 
 ## 运行
 
@@ -65,7 +65,7 @@ node tools/cli.mjs --file sample.txt --json
 
 增加 PING 到 PONG 的响应接口，修复非法 UTF-16 崩溃。
 
-仍不含 socket/TLS、自动重连、SASL 认证和完整网络客户端；CAP END 与注册时机由调用方控制。
+尚无 SASL/PASS 认证、频道成员/模式缓存、自动重加入和长期真实 IRC 服务端互操作；Node 宿主提供网络，Wasm-GC 核心仍由宿主接入传输。
 
 [可执行 API 示例](README.mbt.md)会随测试运行；[功能边界](FEATURES.md)和[测试说明](TESTING.md)用于独立审查。网页与 CLI 展示示例入口，新 API 的完整使用见可执行示例。
 
@@ -73,3 +73,24 @@ node tools/cli.mjs --file sample.txt --json
 新增 MoonBit CAP 302 状态：多行 LS/LIST/ACK 原子更新、能力值、REQ、NAK、NEW/DEL 和资源边界。
 
 规范：[IRCv3 Capability Negotiation](https://ircv3.net/specs/extensions/capability-negotiation.html)。新增 10 组按规范编写的测试；未做真实 IRC 服务器互操作，不能据此宣称完整客户端兼容。
+
+
+0.4.0 新增 MoonBit 注册/协商会话和 Node TCP/TLS 客户端：自动 PONG、CAP 选择与等待确认、注册拒绝、超时、有上限的重连、收发缓冲限制。
+
+## 实际连接
+
+`tools/network-client.mjs` 使用附带的 MoonBit 引擎，Node 24 可直接导入。默认 TLS 且验证证书与主机名；默认不重连，可设置 maxReconnects 和 reconnectDelayMs。每次重连新建 MoonBit Session，重新注册。网络入口不会自动加入频道或发送聊天消息。
+
+```js
+import {IrcClient} from './tools/network-client.mjs';
+const client = new IrcClient({host:'irc.example.org', nick:'reviewer', capabilities:['server-time'], maxReconnects:2});
+client.on('message', line => console.log(line));
+client.on('fault', error => console.error(error.message));
+await client.connect(); // 在收到 001 后完成
+// client.send('JOIN #your-channel'); // 由应用显式发起
+// client.close();
+```
+
+`node tools/test-network.mjs` 启动本机 TCP/TLS 测试服务器，不连接公网。TLS 测试需要 OpenSSL（Windows 可使用 Git 自带版本或 OPENSSL 环境变量）。9 项网络测试覆盖注册协商、拆包中文、服务端实际收到发送数据、拒绝/超时、重连、非法流和证书校验。TLS 测试密钥临时生成并清理。它们是协议测试服务端，不是第三方 IRC daemon 的互操作证明。
+
+connect 只使用一次；registered 事件在每次注册成功时触发。close 取消重连；不缓存断线时的发送请求。默认注册 15 秒、空闲 120 秒，重连次数覆盖该客户端生命周期，不在成功后清零。单行上限 8194 字节，待发送数据上限 1 MiB。
