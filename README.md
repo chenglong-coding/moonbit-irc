@@ -1,6 +1,6 @@
 # IRC 协议核心
 
-IRC 消息、IRCv3 tags 和受限增量行解析。本地候选版 0.2.0，供比较和代码审查；尚未作为完整竞赛作品提交。
+IRC 消息、IRCv3 tags 和受限增量行解析。本地候选版 0.3.0，供比较和代码审查；尚未作为完整竞赛作品提交。
 
 ## 运行
 
@@ -65,6 +65,11 @@ node tools/cli.mjs --file sample.txt --json
 
 增加 PING 到 PONG 的响应接口，修复非法 UTF-16 崩溃。
 
-协议消息核心；不含重连、TLS、CAP 协商与网络客户端。
+仍不含 socket/TLS、自动重连、SASL 认证和完整网络客户端；CAP END 与注册时机由调用方控制。
 
 [可执行 API 示例](README.mbt.md)会随测试运行；[功能边界](FEATURES.md)和[测试说明](TESTING.md)用于独立审查。网页与 CLI 展示示例入口，新 API 的完整使用见可执行示例。
+
+
+新增 MoonBit CAP 302 状态：多行 LS/LIST/ACK 原子更新、能力值、REQ、NAK、NEW/DEL 和资源边界。
+
+规范：[IRCv3 Capability Negotiation](https://ircv3.net/specs/extensions/capability-negotiation.html)。新增 10 组按规范编写的测试；未做真实 IRC 服务器互操作，不能据此宣称完整客户端兼容。

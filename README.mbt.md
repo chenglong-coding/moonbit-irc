@@ -21,4 +21,26 @@ test "PING matching PONG" {
 }
 ```
 
-限制：协议消息核心；不含重连、TLS、CAP 协商与网络客户端。
+限制：仍不含 socket/TLS、自动重连、SASL 认证和完整网络客户端；CAP END 与注册时机由调用方控制。
+
+
+新增 MoonBit CAP 302 状态：多行 LS/LIST/ACK 原子更新、能力值、REQ、NAK、NEW/DEL 和资源边界。
+
+规范：[IRCv3 Capability Negotiation](https://ircv3.net/specs/extensions/capability-negotiation.html)。新增 10 组按规范编写的测试；未做真实 IRC 服务器互操作，不能据此宣称完整客户端兼容。
+
+```mbt check
+///|
+test "CAP negotiation lifecycle" {
+  let caps = @irc.Capabilities::new()
+  caps.observe(@irc.parse("CAP * LS :server-time"))
+  let request = caps.request(["server-time"])
+  assert_eq(request.command, "CAP")
+  assert_false(caps.enabled("server-time"))
+  caps.observe(@irc.parse("CAP * ACK server-time"))
+  assert_true(caps.enabled("server-time"))
+  caps.observe(@irc.parse("CAP nick DEL server-time"))
+  assert_false(caps.enabled("server-time"))
+}
+```
+
+接入时发送 `CAP LS 302` 和 NICK/USER，逐条调用 `observe`；`listing_complete` 后选择能力并发送 `request` 结果。等待 ACK 与应用层认证完成后发送 `CAP END`。不支持 CAP 的服务器、超时与连接重置由宿主管理；每次新连接创建新实例。网页和 CLI 目前提供消息解析入口，新状态 API 如上调用。

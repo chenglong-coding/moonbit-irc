@@ -14,6 +14,20 @@ pub suberror IrcError {
 } derive(@debug.Debug)
 
 // Types and methods
+pub struct Capabilities {
+  mut offered : Map[String, String?]
+  mut active : Map[String, Bool]
+  staged : Map[String, Array[String]]
+  mut ready : Bool
+}
+pub fn Capabilities::available(Self, String) -> Bool
+pub fn Capabilities::enabled(Self, String) -> Bool
+pub fn Capabilities::listing_complete(Self) -> Bool
+pub fn Capabilities::new() -> Self
+pub fn Capabilities::observe(Self, Message) -> Unit raise IrcError
+pub fn Capabilities::request(Self, Array[String]) -> Message raise IrcError
+pub fn Capabilities::value(Self, String) -> String?
+
 pub struct Decoder {
   // private fields
 } derive(@debug.Debug)
