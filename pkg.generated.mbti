@@ -28,6 +28,7 @@ pub(all) struct Message {
   params : Array[String]
 } derive(Eq, @debug.Debug)
 pub fn Message::encode(Self) -> String raise IrcError
+pub fn Message::pong(Self) -> Self raise IrcError
 
 pub(all) struct Tag {
   key : String

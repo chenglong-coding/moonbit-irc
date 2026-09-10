@@ -77,6 +77,9 @@ fn key_valid(s : String) -> Bool {
 
 ///|
 pub fn parse(line : String) -> Message raise IrcError {
+  if !valid_unicode(line) {
+    raise Invalid("ill-formed UTF-16 input")
+  }
   let text = if line.has_suffix("\r\n") {
     line[:line.length() - 2].to_owned()
   } else {

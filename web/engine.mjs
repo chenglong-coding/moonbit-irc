@@ -3566,23 +3566,52 @@ function _M0IPC16option6OptionPC15debug5Debug8to__reprGsE(self) {
 function _M0FPC28encoding4utf814encode_2einner(str, bom) {
   return _M0FPC28encoding4utf816encode__utf8__js(_M0MPC16string10StringView4data(str), _M0MPC16string10StringView13start__offset(str), str.end - str.start | 0, bom);
 }
-function _M0IP211localreview3irc3TagPC15debug5Debug8to__repr(_x_64) {
-  const _bind = [{ _0: "key", _1: _M0IPC16string6StringPC15debug5Debug8to__repr(_x_64.key) }, { _0: "value", _1: _M0IPC16option6OptionPC15debug5Debug8to__reprGsE(_x_64.value) }];
+function _M0IP211localreview3irc3TagPC15debug5Debug8to__repr(_x_69) {
+  const _bind = [{ _0: "key", _1: _M0IPC16string6StringPC15debug5Debug8to__repr(_x_69.key) }, { _0: "value", _1: _M0IPC16option6OptionPC15debug5Debug8to__reprGsE(_x_69.value) }];
   return _M0MPC15debug4Repr6record(_M0MPB3Map3MapGsRPC15debug4ReprE(new _M0TPB9ArrayViewGUsRPC15debug4ReprEE(_bind, 0, 2), undefined));
 }
-function _M0IP211localreview3irc8IrcErrorPC15debug5Debug8to__repr(_x_56) {
-  let _arg_57;
+function _M0IP211localreview3irc8IrcErrorPC15debug5Debug8to__repr(_x_61) {
+  let _arg_62;
   _L: {
-    const _Invalid = _x_56;
-    const _$42$arg_57 = _Invalid._0;
-    _arg_57 = _$42$arg_57;
+    const _Invalid = _x_61;
+    const _$42$arg_62 = _Invalid._0;
+    _arg_62 = _$42$arg_62;
     break _L;
   }
-  return _M0MPC15debug4Repr4ctor("Invalid", [{ _0: undefined, _1: _M0IPC16string6StringPC15debug5Debug8to__repr(_arg_57) }]);
+  return _M0MPC15debug4Repr4ctor("Invalid", [{ _0: undefined, _1: _M0IPC16string6StringPC15debug5Debug8to__repr(_arg_62) }]);
 }
-function _M0IP211localreview3irc7MessagePC15debug5Debug8to__repr(_x_54) {
-  const _bind = [{ _0: "tags", _1: _M0IPC15array5ArrayPC15debug5Debug8to__reprGRP211localreview3irc3TagE(_x_54.tags) }, { _0: "prefix", _1: _M0IPC16option6OptionPC15debug5Debug8to__reprGsE(_x_54.prefix) }, { _0: "command", _1: _M0IPC16string6StringPC15debug5Debug8to__repr(_x_54.command) }, { _0: "params", _1: _M0IPC15array5ArrayPC15debug5Debug8to__reprGsE(_x_54.params) }];
+function _M0IP211localreview3irc7MessagePC15debug5Debug8to__repr(_x_59) {
+  const _bind = [{ _0: "tags", _1: _M0IPC15array5ArrayPC15debug5Debug8to__reprGRP211localreview3irc3TagE(_x_59.tags) }, { _0: "prefix", _1: _M0IPC16option6OptionPC15debug5Debug8to__reprGsE(_x_59.prefix) }, { _0: "command", _1: _M0IPC16string6StringPC15debug5Debug8to__repr(_x_59.command) }, { _0: "params", _1: _M0IPC15array5ArrayPC15debug5Debug8to__reprGsE(_x_59.params) }];
   return _M0MPC15debug4Repr6record(_M0MPB3Map3MapGsRPC15debug4ReprE(new _M0TPB9ArrayViewGUsRPC15debug4ReprEE(_bind, 0, 4), undefined));
+}
+function _M0FP211localreview3irc14valid__unicode(text) {
+  const i = new _M0TPB8MutLocalGiE(0);
+  while (true) {
+    if (i.val < text.length) {
+      const _tmp = i.val;
+      const u = _tmp >>> 0 < text.length ? text.charCodeAt(_tmp) : $oob();
+      if (u >= 55296 && u <= 56319) {
+        if ((i.val + 1 | 0) >= text.length) {
+          return false;
+        }
+        const _tmp$2 = i.val + 1 | 0;
+        const next = _tmp$2 >>> 0 < text.length ? text.charCodeAt(_tmp$2) : $oob();
+        if (next < 56320 || next > 57343) {
+          return false;
+        }
+        i.val = i.val + 2 | 0;
+      } else {
+        if (u >= 56320 && u <= 57343) {
+          return false;
+        }
+        i.val = i.val + 1 | 0;
+      }
+      continue;
+    } else {
+      break;
+    }
+  }
+  return true;
 }
 function _M0FP211localreview3irc10key__valid(s) {
   if (s === "" || s === "+") {
@@ -3664,6 +3693,9 @@ function _M0FP211localreview3irc8unescape(s) {
   return out.val;
 }
 function _M0FP211localreview3irc5parse(line) {
+  if (!_M0FP211localreview3irc14valid__unicode(line)) {
+    return new _M0DTPC16result6ResultGRP211localreview3irc7MessageRP211localreview3irc8IrcErrorE3Err(new _M0DTPC15error5Error38localreview_2firc_2eIrcError_2eInvalid("ill-formed UTF-16 input"));
+  }
   let text;
   const _bind = "\r\n";
   if (_M0MPC16string6String11has__suffix(line, new _M0TPC16string10StringView(_bind, 0, _bind.length))) {
