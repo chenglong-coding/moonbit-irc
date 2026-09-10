@@ -71,3 +71,43 @@ await test('idle timeout after registration disconnects cleanly', {timeout:3000}
   const f=await fixture(t,s=>readLines(s,line=>{if(line.startsWith('USER '))s.write(':s 001 tester :Welcome\r\n')}));
   const c=client(t,f.port,{idleTimeoutMs:40});await c.connect();const [error]=await once(c,'disconnected');assert.match(error.message,/Idle timeout/);
 });
+
+await test('TLS SASL PLAIN chunks and PASS succeed only after authentication', {timeout:10000},async t=>{
+  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'moonbit-irc-tls-'));t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+  const openssl=process.env.OPENSSL??(process.platform==='win32'&&fs.existsSync('C:/Program Files/Git/usr/bin/openssl.exe')?'C:/Program Files/Git/usr/bin/openssl.exe':'openssl');
+  const key=path.join(dir,'key.pem'),cert=path.join(dir,'cert.pem');
+  const result=spawnSync(openssl,['req','-x509','-newkey','rsa:2048','-nodes','-keyout',key,'-out',cert,'-days','1','-subj','/CN=localhost','-addext','subjectAltName=DNS:localhost'],{encoding:'utf8',timeout:8000});assert.equal(result.status,0,result.stderr);
+  const ca=fs.readFileSync(cert);
+
+  for(const result of ['903','904','001']) {
+    const seen=[];let chunks='';
+    const password='假密码'.repeat(80);
+    const f=await fixture(t,s=>readLines(s,line=>{
+      seen.push(line);
+      if(line.startsWith('USER '))s.write('CAP * LS :sasl=PLAIN\r\n');
+      if(line==='CAP REQ sasl')s.write('CAP * ACK sasl\r\n');
+      if(line==='AUTHENTICATE PLAIN')s.write('AUTHENTICATE +\r\n');
+      else if(line.startsWith('AUTHENTICATE ')){
+        const chunk=line.slice(13);if(chunk!=='+')chunks+=chunk;
+        assert.ok(chunk.length<=400);
+        if(chunk==='+'||chunk.length<400){
+          assert.equal(Buffer.from(chunks,'base64').toString('utf8'),'\0tester\0'+password);
+          assert.ok(!seen.includes('CAP END'));
+          s.write(':s '+result+' tester :result\r\n');
+        }
+      }
+      if(line==='CAP END')s.write(':s 001 tester :Welcome\r\n');
+    }),{key:fs.readFileSync(key),cert:ca});
+    const c=client(t,f.port,{tls:true,ca,servername:'localhost',serverPassword:'local-fixture-password',sasl:{username:'tester',password}});
+    if(result==='903'){await c.connect();assert.equal(c.status,'registered');assert.ok(seen.includes('CAP END'))}
+    else await assert.rejects(c.connect(),result==='904'?/904/:/before required authentication/);
+    assert.equal(seen[0],'PASS local-fixture-password');
+    assert.ok(seen.filter(x=>x.startsWith('AUTHENTICATE ')).length>=3);
+    c.close();
+  }
+});
+await test('credential options require TLS and reject malformed input',()=>{
+  assert.throws(()=>new IrcClient({host:'localhost',tls:false,sasl:{username:'u',password:'p'}}),/require TLS/);
+  assert.throws(()=>new IrcClient({host:'localhost',tls:false,serverPassword:'p'}),/require TLS/);
+  assert.throws(()=>new IrcClient({host:'localhost',sasl:{username:'',password:'p'}}),/Invalid SASL/);
+});

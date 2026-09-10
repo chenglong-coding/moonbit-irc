@@ -12,6 +12,7 @@ options(
       "exports": [
         "run",
         "session_open",
+        "session_open_auth",
         "session_receive",
         "session_status",
         "session_close",

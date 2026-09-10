@@ -2,7 +2,7 @@ import net from 'node:net';
 import tls from 'node:tls';
 import {EventEmitter} from 'node:events';
 import {randomUUID} from 'node:crypto';
-import {session_open,session_receive,session_status,session_close,validate_outgoing} from '../web/engine.mjs';
+import {session_open_auth,session_receive,session_status,session_close,validate_outgoing} from '../web/engine.mjs';
 
 /** Node transport for the compiled MoonBit registration/IRCv3 core. No implicit channel joins or messages. */
 export class IrcClient extends EventEmitter {
@@ -13,6 +13,11 @@ export class IrcClient extends EventEmitter {
     const o=this.options;
     for(const name of ['nick','user','realname'])if(typeof o[name]!=='string')throw new Error('Invalid '+name);
     if(typeof o.tls!=='boolean')throw new Error('Invalid TLS option');
+    if(o.serverPassword!==undefined&&(typeof o.serverPassword!=='string'||!o.serverPassword))throw new Error('Invalid server password');
+    if(o.sasl!==undefined){
+      if(!o.sasl||typeof o.sasl.username!=='string'||!o.sasl.username||typeof o.sasl.password!=='string'||!o.sasl.password||o.sasl.authorizationId!==undefined&&typeof o.sasl.authorizationId!=='string')throw new Error('Invalid SASL credentials');
+    }
+    if(!o.tls&&(o.sasl!==undefined||o.serverPassword!==undefined))throw new Error('Credentials require TLS');
     if(typeof o.host!=='string'||!o.host||!Number.isInteger(o.port)||o.port<1||o.port>65535)throw new Error('Valid host and port required');
     for(const name of ['registrationTimeoutMs','idleTimeoutMs','reconnectDelayMs'])if(!Number.isFinite(o[name])||o[name]<1||o[name]>2147483647)throw new Error('Invalid '+name);
     if(!Number.isInteger(o.maxReconnects)||o.maxReconnects<0||o.maxReconnects>100)throw new Error('Invalid maxReconnects');
@@ -28,7 +33,7 @@ export class IrcClient extends EventEmitter {
     if(this.#stopped)return;
     this.#key=randomUUID();this.#buffer=Buffer.alloc(0);this.#ready=false;
     const o=this.options;
-    const initial=session_open(this.#key,o.nick,o.user,o.realname,o.capabilities.join(' '));
+    const initial=session_open_auth(this.#key,o.nick,o.user,o.realname,o.capabilities.join(' '),o.serverPassword??'',o.sasl?.username??'',o.sasl?.password??'',o.sasl?.authorizationId??'');
     if(initial.startsWith('ERROR:')){session_close(this.#key);this.#key=undefined;this.#reject?.(new Error(initial));this.#reject=undefined;return}
     const socket=o.tls?tls.connect({host:o.host,port:o.port,servername:o.servername??(net.isIP(o.host)?undefined:o.host),ca:o.ca,rejectUnauthorized:true}):net.connect({host:o.host,port:o.port});
     this.#socket=socket;

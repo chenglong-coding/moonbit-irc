@@ -1,24 +1,24 @@
 {
   "project": "moonbit-irc",
-  "version": "0.4.0",
-  "timestamp": "2026-09-10T12:20:59.013895+00:00",
+  "version": "0.5.0",
+  "timestamp": "2026-09-10T12:31:14.845210+00:00",
   "exit_code": 0,
   "backend_test_counts": [
     [
-      "22",
-      "22",
+      "28",
+      "28",
       "0"
     ],
     [
-      "22",
-      "22",
+      "28",
+      "28",
       "0"
     ]
   ],
-  "scope": "Local Windows verify.ps1; IRCv3 state scenarios plus nine loopback TCP/TLS integration tests; remote CI not run",
+  "scope": "Local Windows verify.ps1; IRCv3 state scenarios plus eleven network checks and six Ergo 2.19.1 interoperability checks; remote CI not run",
   "coverage": {
-    "covered": 320,
-    "total": 354,
+    "covered": 387,
+    "total": 421,
     "measurement": "MoonBit instrumentation points"
   },
   "robustness": {
@@ -31,23 +31,39 @@
   },
   "benchmark": {
     "project": "irc",
-    "utc": "2026-09-10T12:20:23.825Z",
+    "utc": "2026-09-10T12:26:01.109Z",
     "runtime": "v24.11.0",
     "platform": "win32",
     "cpu": "Intel(R) Core(TM) i7-14700HX",
     "input_utf8_bytes": 75,
     "samples": 30,
     "warmup": 5,
-    "median_ms": 0.11659999999999826,
-    "p95_ms": 0.2773000000000039,
-    "max_ms": 0.5293999999999954,
+    "median_ms": 0.1063000000000045,
+    "p95_ms": 0.26019999999999754,
+    "max_ms": 0.541799999999995,
     "scope": "JS warm execution of documented example; no cross-project or upstream performance claim"
   },
   "cap_specification_tests": 10,
   "session_tests": 4,
-  "network_integration_tests": 9,
+  "network_integration_tests": 11,
+  "sasl_tests": 6,
+  "ergo_interoperability": {
+    "oracle": "ergo-2.19.1",
+    "binary_sha256": "3b8d100dd43274c0a0e600ed183555d5330618f2815dfe9c614ceb50e39d6804",
+    "timestamp": "2026-09-10T12:30:13.631Z",
+    "scope": "Local isolated Ergo daemon over verified TLS; temporary database and synthetic account",
+    "checks": [
+      "CAP 302 and registration",
+      "NickServ account creation",
+      "SASL PLAIN success numeric 903",
+      "Unicode PRIVMSG to second local client",
+      "server-time tag",
+      "wrong password rejected with 904"
+    ],
+    "passed": 6
+  },
   "reference": "https://ircv3.net/specs/extensions/capability-negotiation.html",
-  "third_party_daemon_interoperability": "not run",
+  "third_party_daemon_interoperability": "Ergo 2.19.1: 6 checks passed",
   "network_integration": "real loopback TCP and TLS with protocol fixture; trust and hostname verification",
   "remote_ci": "not run"
 }

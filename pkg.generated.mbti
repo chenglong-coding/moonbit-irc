@@ -44,17 +44,24 @@ pub(all) struct Message {
 pub fn Message::encode(Self) -> String raise IrcError
 pub fn Message::pong(Self) -> Self raise IrcError
 
+pub struct SaslPlain {
+  payload : String
+}
+pub fn SaslPlain::new(String, String, authorization_id? : String) -> Self raise IrcError
+
 pub struct Session {
   caps : Capabilities
   desired : Array[String]
   pending : Map[String, Bool]
   mut state : String
   mut requested : Bool
+  mut auth_data : String
+  mut auth_state : String
 }
 pub fn Session::enabled(Self, String) -> Bool
-pub fn Session::new(Array[String]) -> Self raise IrcError
+pub fn Session::new(Array[String], plain? : SaslPlain?) -> Self raise IrcError
 pub fn Session::receive(Self, Message) -> Array[Message] raise IrcError
-pub fn Session::start(Self, String, String, String) -> Array[Message] raise IrcError
+pub fn Session::start(Self, String, String, String, server_password? : String?) -> Array[Message] raise IrcError
 pub fn Session::status(Self) -> String
 
 pub(all) struct Tag {

@@ -6,25 +6,43 @@ pub struct Session {
   pending : Map[String, Bool]
   mut state : String
   mut requested : Bool
+  mut auth_data : String
+  mut auth_state : String
 }
 
 ///|
-pub fn Session::new(desired : Array[String]) -> Session raise IrcError {
+pub fn Session::new(
+  desired : Array[String],
+  plain? : SaslPlain? = None,
+) -> Session raise IrcError {
   if desired.length() > 64 {
     raise Invalid("too many desired capabilities")
   }
   for name in desired {
     ignore(capability_token(name, false, false))
-    if name == "sasl" {
-      raise Invalid("SASL authentication not implemented")
+    if name == "sasl" && plain is None {
+      raise Invalid("SASL credentials required")
     }
+  }
+  let wanted = desired.copy()
+  if plain is Some(_) && !wanted.contains("sasl") {
+    wanted.push("sasl")
   }
   {
     caps: Capabilities::new(),
-    desired: desired.copy(),
+    desired: wanted,
     pending: Map([]),
     state: "new",
     requested: false,
+    auth_data: match plain {
+      Some(p) => p.payload
+      None => ""
+    },
+    auth_state: if plain is Some(_) {
+      "required"
+    } else {
+      "none"
+    },
   }
 }
 
@@ -44,6 +62,7 @@ pub fn Session::start(
   nick : String,
   user : String,
   realname : String,
+  server_password? : String? = None,
 ) -> Array[Message] raise IrcError {
   if self.state != "new" {
     raise Invalid("session already started")
@@ -55,7 +74,19 @@ pub fn Session::start(
       raise Invalid("invalid registration identifier")
     }
   }
-  let messages = [
+  let messages = []
+  if server_password is Some(password) {
+    if password.is_empty() {
+      raise Invalid("empty server password")
+    }
+    messages.push(Message::{
+      tags: [],
+      prefix: None,
+      command: "PASS",
+      params: [password],
+    })
+  }
+  let registration = [
     Message::{ tags: [], prefix: None, command: "CAP", params: ["LS", "302"], },
     Message::{ tags: [], prefix: None, command: "NICK", params: [nick], },
     Message::{
@@ -65,6 +96,9 @@ pub fn Session::start(
       params: [user, "0", "*", realname],
     },
   ]
+  for message in registration {
+    messages.push(message)
+  }
   for message in messages {
     ignore(message.encode())
   }
@@ -82,6 +116,7 @@ pub fn Session::receive(
   }
   errdefer {
     self.state = "failed"
+    self.auth_data = ""
   }
   if message.command == "ERROR" ||
     ["432", "433", "436", "464", "465"].contains(message.command) {
@@ -90,7 +125,40 @@ pub fn Session::receive(
   if message.command == "PING" {
     return [message.pong()]
   }
+  if ["902", "904", "905", "906", "907"].contains(message.command) &&
+    self.auth_state != "none" {
+    raise Invalid("SASL authentication rejected: " + message.command)
+  }
+  if message.command == "AUTHENTICATE" {
+    if self.auth_state != "challenge" || message.params != ["+"] {
+      raise Invalid("unexpected SASL challenge")
+    }
+    let out = []
+    let mut at = 0
+    while at < self.auth_data.length() {
+      let end = (at + 400).min(self.auth_data.length())
+      out.push(auth_message(self.auth_data[at:end].to_owned()))
+      at = end
+    }
+    if self.auth_data.length() % 400 == 0 {
+      out.push(auth_message("+"))
+    }
+    self.auth_data = ""
+    self.auth_state = "result"
+    return out
+  }
+  if message.command == "903" {
+    if self.auth_state != "result" {
+      raise Invalid("unexpected SASL success")
+    }
+    self.auth_state = "success"
+    return self.finish_negotiation()
+  }
   if message.command == "001" {
+    if self.auth_state != "none" && self.auth_state != "success" {
+      raise Invalid("registration before required authentication")
+    }
+
     self.state = "registered"
     return []
   }
@@ -98,6 +166,9 @@ pub fn Session::receive(
   if self.state == "negotiating" &&
     message.command == "421" &&
     message.params.contains("CAP") {
+    if self.auth_state != "none" {
+      raise Invalid("server does not support required SASL")
+    }
     self.state = "registering"
     return []
   }
@@ -106,8 +177,22 @@ pub fn Session::receive(
   }
   self.caps.observe(message)
   let kind = message.params[1]
+  if (self.auth_state == "challenge" || self.auth_state == "result") &&
+    !self.caps.enabled("sasl") {
+    raise Invalid("SASL capability revoked during authentication")
+  }
   let out = []
   if kind == "LS" && self.caps.listing_complete() && !self.requested {
+    if self.auth_state == "required" {
+      if !self.caps.available("sasl") {
+        raise Invalid("SASL unavailable")
+      }
+      if self.caps.value("sasl") is Some(mechanisms) {
+        if !mechanisms.split(",").any(x => x == "PLAIN") {
+          raise Invalid("SASL PLAIN unavailable")
+        }
+      }
+    }
     self.requested = true
     for name in self.desired {
       if self.caps.available(name) && !self.pending.contains(name) {
@@ -145,14 +230,30 @@ pub fn Session::receive(
       }
     }
   }
-  if self.state == "negotiating" && self.requested && self.pending.is_empty() {
-    out.push(Message::{
-      tags: [],
-      prefix: None,
-      command: "CAP",
-      params: ["END"],
-    })
-    self.state = "registering"
+  if self.auth_state == "required" &&
+    self.requested &&
+    !self.pending.contains("sasl") {
+    if !self.caps.enabled("sasl") {
+      raise Invalid("required SASL capability rejected")
+    }
+    self.auth_state = "challenge"
+    out.push(auth_message("PLAIN"))
+  }
+  for message in self.finish_negotiation() {
+    out.push(message)
   }
   out
+}
+
+///|
+fn Session::finish_negotiation(self : Session) -> Array[Message] {
+  if self.state == "negotiating" &&
+    self.requested &&
+    self.pending.is_empty() &&
+    (self.auth_state == "none" || self.auth_state == "success") {
+    self.state = "registering"
+    [Message::{ tags: [], prefix: None, command: "CAP", params: ["END"], }]
+  } else {
+    []
+  }
 }

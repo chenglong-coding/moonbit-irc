@@ -21,12 +21,12 @@ test "PING matching PONG" {
 }
 ```
 
-限制：尚无 SASL/PASS 认证、频道成员/模式缓存、自动重加入和长期真实 IRC 服务端互操作；Node 宿主提供网络，Wasm-GC 核心仍由宿主接入传输。
+限制：尚无 SASL EXTERNAL/SCRAM 与 SASLprep、频道成员/模式缓存、自动重加入和长期多服务端验证；目前仅支持 PLAIN 认证机制。
 
 
 新增 MoonBit CAP 302 状态：多行 LS/LIST/ACK 原子更新、能力值、REQ、NAK、NEW/DEL 和资源边界。
 
-规范：[IRCv3 Capability Negotiation](https://ircv3.net/specs/extensions/capability-negotiation.html)。新增 10 组按规范编写的测试；未做真实 IRC 服务器互操作，不能据此宣称完整客户端兼容。
+规范：[IRCv3 Capability Negotiation](https://ircv3.net/specs/extensions/capability-negotiation.html)。新增 10 组按规范编写的测试；另已通过 Ergo 2.19.1 本地 TLS/SASL/消息互通；仍不宣称全部 IRC 客户端行为兼容。
 
 ```mbt check
 ///|
@@ -47,3 +47,6 @@ test "CAP negotiation lifecycle" {
 
 
 0.4.0 新增 MoonBit 注册/协商会话和 Node TCP/TLS 客户端：自动 PONG、CAP 选择与等待确认、注册拒绝、超时、有上限的重连、收发缓冲限制。
+
+
+0.5.0 新增服务器 PASS 与必需 SASL PLAIN 认证：CAP 确认后发送凭证，400 字节分块、等待 903、拒绝匿名降级。Node 认证连接要求 TLS。
