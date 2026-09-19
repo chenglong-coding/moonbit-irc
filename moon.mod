@@ -1,4 +1,4 @@
-name = "localreview/irc"
+name = "chenglong-coding/irc"
 
 version = "0.5.0"
 
