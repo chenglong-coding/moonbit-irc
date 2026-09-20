@@ -1,5 +1,7 @@
 # IRC 协议核心
 
+> 2026-09-21 本地构建修复：命令包 import 已同步到当前 moon.mod 模块名；moon info/check、JS 构建、MoonBit 示例和 Node 引擎示例通过。算法未改，本轮未重跑历史全部行为/性能套件。当前提交指纹见 evidence/module-import-fix.json。
+
 IRC 消息、IRCv3 tags 和受限增量行解析。本地候选版 0.5.0，供比较和代码审查；尚未作为完整竞赛作品提交。
 
 ## 运行
