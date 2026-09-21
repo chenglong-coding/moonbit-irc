@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "localreview/irc"
+package "chenglong-coding/irc"
 
 import {
   "moonbitlang/core/debug",

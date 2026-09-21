@@ -1,5 +1,5 @@
 import {
-  "localreview/irc" @lib,
+  "chenglong-coding/irc" @lib,
 }
 
 pkgtype(kind: "executable")
