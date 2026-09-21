@@ -1,5 +1,13 @@
 # IRC 协议核心
 
+## 获取与验证入口
+
+公开源码：[github.com/chenglong-coding/moonbit-irc](https://github.com/chenglong-coding/moonbit-irc)；MoonBit 模块名为 `chenglong-coding/irc`。
+
+从源码运行：`git clone https://github.com/chenglong-coding/moonbit-irc.git` 后进入该目录，按下文和 [TESTING.md](TESTING.md) 安装所需工具。仓库公开不等于已在 Mooncakes 发布，不承诺 `moon add` 当前可用。
+
+查看 [GitHub Actions](https://github.com/chenglong-coding/moonbit-irc/actions) 时请核对 run 的 commit SHA；历史 evidence、旧 ZIP 与本地测试不能替代当前提交的 CI 结果。下文保留各版本的验证范围和兼容性限制。
+
 IRC 消息、IRCv3 tags 和受限增量行解析。本地候选版 0.5.0，供比较和代码审查；尚未作为完整竞赛作品提交。
 
 ## 运行
@@ -12,7 +20,7 @@ moon test
 moon run cmd/main
 ```
 
-也可在本目录运行 `./verify.ps1` 验证本项目。`pkg.generated.mbti` 是真实工具链生成的公共 API。命名空间 `localreview` 仅用于本地，正式发布前应替换为申请人的账号。
+也可在本目录运行 `./verify.ps1` 验证本项目。`pkg.generated.mbti` 是真实工具链生成的公共 API。当前模块名为 `chenglong-coding/irc`；以 moon.mod 和生成的公共接口为准。
 
 ## 本版范围
 
@@ -46,11 +54,11 @@ moon run cmd/main
 
 打开 http://127.0.0.1:8777/web/ 。修改和测试源码需安装 MoonBit 与 Node.js，再运行 `./verify.ps1`。本机尚未将 MoonBit 加入 PATH 时，可传入 `-MoonPath`。独立包不捆绑编译器。
 
-仅含本项目源码和构建产物；没有上传仓库或发布包。`DUPLICATION.md`、`evidence/current-validation.json` 和本次分装清单 提供查重、测试和完整性资料。
+> 历史开发记录（以下发布/归档状态不代表当前仓库；当前入口见文首）：仅含本项目源码和构建产物；没有上传仓库或发布包。`DUPLICATION.md`、`evidence/current-validation.json` 和本次分装清单 提供查重、测试和完整性资料。
 
 ## 独立仓库工作流
 
-本目录是该项目后续开发的唯一主仓库，旧批次目录及 ZIP 为历史审查快照。没有 Git remote，没有共享构建目录，没有上级 moon.work。
+> 历史开发记录（以下发布/归档状态不代表当前仓库；当前入口见文首）：本目录是该项目后续开发的唯一主仓库，旧批次目录及 ZIP 为历史审查快照。没有 Git remote，没有共享构建目录，没有上级 moon.work。
 
 真实 CLI 支持输入参数、文件和标准输入：
 
