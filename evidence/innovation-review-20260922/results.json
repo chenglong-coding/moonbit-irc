@@ -1,0 +1,56 @@
+{
+  "date": "2026-09-22",
+  "project": "irc",
+  "package": "chenglong-coding/irc",
+  "version": "0.5.0",
+  "code_base_commit_before_materials": "e4815a6da562ca4e7165dc8d87159eec3ad3d1df",
+  "core_checks": [
+    {
+      "command": [
+        "moon",
+        "test",
+        "--target",
+        "js"
+      ],
+      "exit": 0,
+      "seconds": 2.09,
+      "log": "irc-test---target-js.log"
+    },
+    {
+      "command": [
+        "moon",
+        "test",
+        "--target",
+        "wasm-gc"
+      ],
+      "exit": 0,
+      "seconds": 1.38,
+      "log": "irc-test---target-wasm-gc.log"
+    },
+    {
+      "command": [
+        "moon",
+        "build",
+        "--target",
+        "js"
+      ],
+      "exit": 0,
+      "seconds": 1.52,
+      "log": "irc-build---target-js.log"
+    }
+  ],
+  "workflow_checks": [
+    {
+      "command": [
+        "node",
+        "tools/test-network.mjs"
+      ],
+      "exit": 0,
+      "seconds": 1.0,
+      "log": "irc-workflow-0.log"
+    }
+  ],
+  "interpretation": "本轮本机 TCP/TLS 11 项检查通过；历史 Ergo2.19.1 互通报告是另外的固定版本证据。",
+  "limit": "只有 SASL PLAIN，无 EXTERNAL/SCRAM、完整频道状态及自动重加入；未证明长期生产稳定性。",
+  "remote_push_performed": false
+}

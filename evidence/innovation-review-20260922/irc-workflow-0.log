@@ -1,0 +1,19 @@
+✔ real TCP: fragmented CAP 302, PING, Unicode and application send (59.918ms)
+✔ legacy server without CAP registers (5.609ms)
+✔ registration rejection closes and rejects connect (5.252ms)
+✔ registration timeout bounds silent peer (43.0624ms)
+✔ reconnect creates fresh MoonBit session and repeats registration (16.5014ms)
+✔ malformed UTF8, bare LF, overlong and truncated stream reject (11.4799ms)
+✔ manual close cancels registration and retry (1.7788ms)
+✔ TLS verifies certificate trust and hostname (307.0959ms)
+✔ idle timeout after registration disconnects cleanly (45.1653ms)
+✔ TLS SASL PLAIN chunks and PASS succeed only after authentication (277.8531ms)
+✔ credential options require TLS and reject malformed input (0.3845ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 782.9498
