@@ -1,0 +1,17 @@
+{
+  "project": "irc",
+  "title": "IRCv3 协商与 TLS/SASL 会话核心",
+  "module": "chenglong-coding/irc",
+  "version": "0.5.0",
+  "repository": "https://github.com/chenglong-coding/moonbit-irc",
+  "status": "暂缓复申",
+  "remainingRisk": "已收到选题过窄、价值有限的初审反馈；本轮无新增使用方依据，不通过扩大宣传解除该问题。",
+  "actualUsersClaimed": false,
+  "anonymousCloneVerified": true,
+  "publicHead": "119a9fa1e86b0fad8e083adea1ac63e96464d262",
+  "defaultBranch": "origin/main",
+  "localChangesPublished": false,
+  "proposalLines": 25,
+  "useCase": "保留 IRCv3 tags 的报文读取",
+  "diff": "本轮未找到同范围 MoonBit IRCv3 客户端。价值是可复用协议状态和可运行连接流程，不是新协议或全生态首次通信程序。"
+}

@@ -1,0 +1,14 @@
+{
+  "title": "保留 IRCv3 tags 的报文读取",
+  "scope": "离线合成消息；仅保留库用法，不将其作为已经解决选题价值问题的证明。",
+  "steps": [
+    {
+      "args": [
+        "tools/cli.mjs",
+        "--file",
+        "examples/use-case/message.txt"
+      ]
+    }
+  ],
+  "expected": "解析 tags/prefix/params 并重编码；不会向任何频道发送消息。"
+}

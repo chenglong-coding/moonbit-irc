@@ -2,3 +2,5 @@
 *.png -text
 *.jpg -text
 *.wasm -text
+# Preserve protocol/message bytes in standalone source archives.
+examples/use-case/message.txt -text whitespace=cr-at-eol

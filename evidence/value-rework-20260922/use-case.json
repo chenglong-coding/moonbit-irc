@@ -1,0 +1,61 @@
+{
+  "date": "2026-09-22",
+  "command": "node examples/run-use-case.mjs",
+  "passed": true,
+  "scope": "离线合成消息；仅保留库用法，不将其作为已经解决选题价值问题的证明。",
+  "actualUsersProven": false,
+  "externalServicesContacted": false,
+  "sourceSha256": {
+    "capabilities.mbt": "42c4763b895f9cd63bafa5928dcac2e3060a4bc2165017628bad931b076c42b1",
+    "capabilities_test.mbt": "47de256cf058ee9490babd8f6bc12076ba7f9cb6deda1773c715b404f8f5dd84",
+    "edge_test.mbt": "8aa6f56b51b903e4d940977ad24943431bb6c4dd1500ed85cc0d9bbef4e589b3",
+    "message.mbt": "18923380bf31a4aa1d95701bfd9bab494ce80db810120da28984cf9777f78a8a",
+    "message_test.mbt": "fd217e5e24f2404f53baab0e8b243cbff3640f6f065030141db5063eb258a0f1",
+    "moon.mod": "034c044eba65ee1ce08dd9d0a3907f2032806be5dec20e4bac790df142b30f6d",
+    "moon.pkg": "1134caf0e87b782b825ffe0f645120f5c5c0c5edeaabb00045ff15072131f13f",
+    "pkg.generated.mbti": "0cd1fb2534312b49b88bedfc4c4862446d6ea285915ce85be4330142339d97bb",
+    "sasl.mbt": "18d2ab2b6ae016a59ea4bfbca4fc6c216a6126310c28bcf105a8ada5f1b5d871",
+    "sasl_test.mbt": "cdcc64cfe6bddd297cc58188ab4ffcb1d15d0512522db9dfb6b97aceea9ac6d9",
+    "session.mbt": "9d9c54926c4e2376cf08a97b8d7795ad6403b2c0697e10b790c04de242d4fa6c",
+    "session_test.mbt": "6936adeea134096bc318896209b20623e42843a2c9580f57e04d0ca4de8c8095",
+    "stream.mbt": "06b74aba465ca3223358e7b8130391bc0a5defdc3072fd50f88073bfdd17490c",
+    "unicode.mbt": "e29dddece38721706fcdcc09a3b1e17dd9c3bc5bc8ca256124174a4537ba7408",
+    "usability.mbt": "ea47431751bdde2a4e63a80f86f2f02c0147b8074c256f18fef2c80d51555ada",
+    "examples/run-use-case.mjs": "359ea34b13ee185b6cae0536da5e25bb56bfc51d2e5dd166c304b1684003a3bb",
+    "examples/use-case.json": "80afd8ab7184492cd770a225d7a8a348434ec096b609aae086fd2d042072a702",
+    "tools/benchmark.mjs": "53ac611536ba7cb3732017d22976ff8f38dbd9e7aa579c2469eab75b0cdc7216",
+    "tools/cli.mjs": "f98839799f2896c92a75e6565add432efe166f00bc3fed89e03d6d59eca688d4",
+    "tools/network-client.mjs": "2050355dadd029f0e490febebb424b656d1f502c564f70f4e1dabbc1f78ef27b",
+    "tools/robustness.mjs": "24964a078897dccc448ba3d5db4c08f6446d38008424987bf26b4b6f042a21d6",
+    "tools/test-cli.mjs": "b1acaf8992e16d37e1527fd60beeea275ce0df574a9622ab3b44d86dcaf08b03",
+    "tools/test-demo.mjs": "12d680bc8416cf48b68e5ae457cd8dfa770642f783a257e5548ea0fa4ff001e6",
+    "tools/test-ergo.mjs": "5df1f4c6dc26067b18bd8c11ad7c22d6f57d8d82c81fef43eecc62dc42d8c2ec",
+    "tools/test-network.mjs": "2ed4881e0179fdc12813ef0a638352d5a71764044ddb9d3682b9002c33f941a7",
+    "web/app.mjs": "48776698d3dc63fe6ccd5f91be18ccb0a8ac21825eec7427eb5c3c4c8d9069f0",
+    "web/config.mjs": "065bcef4a00c3078a30ebe194db5318633bf26bf08425ea7ba5949574b06cf8e",
+    "web/engine.mjs": "1cbfc868d69720c67e0adb102eb2332d6a47caf1bcc452d773e2e642a47d22bc",
+    "examples/use-case/message.txt": "d26d78cdcb3c415dec2b6665650e9bd8094a8546e238425ff38ece13436f87a5",
+    "cmd/main/main.mbt": "0f2b6c5c23d0000f356e0c45470d0162fb43d5bfac19532b1dd839ea5b1cfd2d",
+    "cmd/main/moon.pkg": "add9df8cd5035c009b97944d1fdea2ad1e51fc70e81565a4edac622d6a57547f",
+    "cmd/main/pkg.generated.mbti": "ec691cdcc898c0b00cc01c406bb088c6a2a2d5c5eb3537bada7db7695e988196",
+    "cmd/web/main.mbt": "972f15cd15dc11645b0b2c91416558ea694c5932bb255e38ea1aaa934a21a1c3",
+    "cmd/web/moon.pkg": "280b204bd436b57403d09487c78abe1640987b23710042a80c8f638c0679e5c0",
+    "cmd/web/session.mbt": "f16a3f27841bdeaa69861f487b1822636c8734e4f6949329f1d95eab3de31b53"
+  },
+  "outputs": [
+    {
+      "file": "step-1.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "step-1.stdout.txt",
+      "bytes": 274,
+      "sha256": "c5a590c3ce0948545752d2e48781a2cffb2a21801ed7aebdb947161302c057db"
+    }
+  ],
+  "additionalChecks": null,
+  "previousCoreValidation": "evidence/innovation-review-20260922/results.json",
+  "note": "New sample execution only; earlier core/reference checks retain their original scope. Command output logs replace the machine-specific temporary directory with {output}; output hashes refer to original bytes. Stored text log line endings are normalized to LF; the protocol input retains exact CRLF.",
+  "sourceHashBasis": "Git-normalized blobs in the delivered source archive. Protocol fixtures are explicitly -text to preserve CRLF; ordinary source line endings normalize to LF."
+}
